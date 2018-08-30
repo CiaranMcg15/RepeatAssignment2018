@@ -1,0 +1,49 @@
+#include <math.h>
+#include <Wire.h>
+#include "rgb_lcd.h"
+const int ledPin=6;
+const int Buzzer=4;
+int a; //value of the sensor
+float c;
+int b = 3985;      
+float resistance;
+
+const int colorR = 23;
+const int colorG = 223;
+const int colorB = 47;  //colour of the screen
+
+rgb_lcd lcd;
+
+
+
+void setup(){
+  pinMode(ledPin,OUTPUT);
+  pinMode(Buzzer,OUTPUT);
+  lcd.begin(16, 2);
+  lcd.setRGB(colorR, colorG, colorB);
+}
+
+void loop(){
+  a = analogRead(0); 
+  resistance = (float)(1023 - a) * 10000 / a; 
+  c = 1 / (log(resistance / 10000) / b + 1 / 298.15) + 26,50; //Code to find the temperature of the room
+
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Warning! temperature in Excess of:");
+  lcd.setCursor(0,1);
+  lcd.print(c); //C stands for celcius 
+  lcd.print("c");
+  delay(1000);
+
+if(c >=25)
+  {
+    digitalWrite(ledPin,HIGH);
+    digitalWrite(Buzzer,HIGH);
+  }
+ else
+ {
+  digitalWrite(ledPin,LOW);
+  digitalWrite(Buzzer,LOW); //code for LED and Buzzer 
+ } 
+ }
